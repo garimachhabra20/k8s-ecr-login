@@ -1,0 +1,19 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: aws-registry-credential-cron
+spec:
+  schedule: "* */6 * * *"
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 2  
+  jobTemplate:
+    spec:
+      backoffLimit: 4
+      template:
+        spec:
+          # serviceAccountName: aws-registry-sa
+          terminationGracePeriodSeconds: 0
+          restartPolicy: Never
+          containers:
+          - name: ecr-login
+            image: chhabra/aws-kubectl-ecr-pull:1.1
